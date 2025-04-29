@@ -169,39 +169,3 @@ export const fetchGuardian = async (category) => {
     return [];
   }
 };
-
-/**
- * Fetch data from News24 RSS
- */
-export const fetchNews24 = async (category) => {
-  const rssFeedUrls = {
-    general: "https://www.news24.com/rss",
-    politics: "https://www.news24.com/rss/politics",
-    business: "https://www.news24.com/rss/business",
-    sports: "https://www.news24.com/rss/sport",
-  };
-
-  const feedUrl = rssFeedUrls[category] || rssFeedUrls.general;
-
-  try {
-    // Use AllOrigins to bypass CORS
-    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(
-      feedUrl
-    )}`;
-    const response = await axios.get(proxyUrl);
-    const feed = await parser.parseString(response.data.contents); // Parse the proxied content
-    return feed.items.map((item) => ({
-      id: item.guid || item.link,
-      title: item.title,
-      description: item.contentSnippet || item.content,
-      image: item.enclosure?.url || "https://via.placeholder.com/600x400",
-      category: category,
-      source: "News24",
-      published: new Date(item.pubDate),
-      url: item.link,
-    }));
-  } catch (error) {
-    console.error("Error fetching data from News24 RSS:", error.message);
-    return [];
-  }
-};
