@@ -1,10 +1,16 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import tailwindcss from "@tailwindcss/vite";
 
-// https://vite.dev/config/
-// vite.config.js
 export default defineConfig({
-  base: "",
-  plugins: [react(), tailwindcss()],
+  base: "/", // Changed from "./" to "/"
+  plugins: [react()],
+  build: {
+    outDir: "dist",
+  },
+  server: {
+    historyApiFallback: true, // Important for client-side routing
+  },
+  preview: {
+    historyApiFallback: true, // Important for Vercel preview
+  },
 });
